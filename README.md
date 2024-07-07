@@ -30,3 +30,7 @@ You can run it on a directory: `flake8 mypackage/`
 - Warns for styling issues.
 - Checks for potential bugs.
 - Generally stricter and more opinionated than flake8.
+
+**PyLint vs Flake8**:
+
+![pylint vs flake8](https://github.com/arjungoel/automating-python-code/blob/main/images/pylint_vs_flake8.png)
