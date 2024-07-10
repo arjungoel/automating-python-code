@@ -30,7 +30,7 @@ jobs:
           echo "Pylint score is $SCORE%.*, which is less than 7. Failing the pipeline."
           exit 1
         else
-          echo "Pylint score is $SCORE%.*, which is less than 7. Passing the pipeline."
+          echo "Pylint score is $SCORE%.*, which is greater than or equal to 7. Passing the pipeline."
         fi
     
     - name: Zip the pylint report
