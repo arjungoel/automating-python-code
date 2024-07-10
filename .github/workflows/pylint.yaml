@@ -24,8 +24,7 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
-        pylint --fail-under=0 --rcfile=.pylintrc . > pylint_report.txt
-        SCORE=$(grep 'Your code has been rated at' pylint_output.txt | awk '{print $7}' | cut -d'/' -f1)
+        SCORE=(pylint --fail-under=0 --rcfile=.pylintrc . > pylint_report.txt)
         echo "pylint score is: $SCORE"
         SCORE=${SCORE%.*}
         if [ "$SCORE" -lt 7 ]; then
