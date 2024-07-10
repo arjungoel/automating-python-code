@@ -27,10 +27,10 @@ jobs:
         pylint --fail-under=0 --rcfile=.pylintrc . > pylint_report.txt
         SCORE=$(grep 'Your code has been rated at' pylint_report.txt | awk '{print $7}' | cut -d'/' -f1)
         if [ "$SCORE" -lt 7 ]; then
-          echo "Pylint score is $SCORE%, which is less than 7. Failing the pipeline."
+          echo "Pylint score is $SCORE, which is less than 7. Failing the pipeline."
           exit 1
         else
-          echo "Pylint score is $SCORE%, which is greater than or equal to 7. Passing the pipeline."
+          echo "Pylint score is $SCORE, which is greater than or equal to 7. Passing the pipeline."
         fi
     
     - name: Zip the pylint report
