@@ -30,7 +30,7 @@ jobs:
         THRESHOLD=7
         if (( $(echo "$SCORE < $THRESHOLD" | bc -l) )); then
           echo "Pylint score is $SCORE, which is less than the threshold of $THRESHOLD."
-          if [ "$BRANCH_NAME" = "feature" ]; then
+          if [[ "$BRANCH_NAME" = "feature" || "$BRANCH_NAME" == feature/* ]]; then
             echo "Warning: Pylint score is below the acceptable threshold on the $BRANCH_NAME branch."
           else
             echo "Error: Pylint score is below the acceptable threshold on the $BRANCH_NAME branch. Failing the pipeline."
