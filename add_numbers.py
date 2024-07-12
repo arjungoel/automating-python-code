@@ -1,5 +1,5 @@
 # Following standards
-def add_numbers(val1,val2):
+def addNumbers(val1,val2):
     """
     Print sum of two numbers
     """
