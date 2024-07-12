@@ -26,19 +26,20 @@ jobs:
       run: |
         pylint --fail-under=0 --rcfile=.pylintrc . > pylint_report.txt
         SCORE=$(grep 'Your code has been rated at' pylint_report.txt | awk '{print $7}' | cut -d'/' -f1)
-        BRANCH_NAME=$GITHUB_REF
+        BRANCH_NAME=${GITHUB_REF##*/}
         THRESHOLD=7
-        if [ "$SCORE" -lt $THRESHOLD ]; then
+        if (( $(echo "$SCORE < $THRESHOLD" | bc -l) )); then
           echo "Pylint score is $SCORE, which is less than the threshold of $THRESHOLD."
           if [ "$BRANCH_NAME" = "feature" ]; then
-            echo "Warning: Pylint score is below the acceptable threshold on the develop branch."
+            echo "Warning: Pylint score is below the acceptable threshold on the $BRANCH_NAME branch."
           else
-            echo "Error: Pylint score is below the acceptable threshold on a higher branch. Failing the pipeline."
+            echo "Error: Pylint score is below the acceptable threshold on the $BRANCH_NAME branch. Failing the pipeline."
             exit 1
           fi
         else
           echo "Pylint score is $SCORE, which is greater than or equal to the threshold of $THRESHOLD. Passing the pipeline."
         fi
+
 
 
     # - name: Analysing the code with pylint
