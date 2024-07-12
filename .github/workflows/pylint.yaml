@@ -1,0 +1,63 @@
+name: Analyse code using pylint
+
+on: 
+  push:
+    branches:
+      - main
+      - feature
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.x"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+    
+    - name: Analysing the code with pylint
+      run: |
+        pylint --fail-under=0 --rcfile=.pylintrc . > pylint_report.txt
+        SCORE=$(grep 'Your code has been rated at' pylint_report.txt | awk '{print $7}' | cut -d'/' -f1)
+        BRANCH_NAME=${GITHUB_REF##*/}
+        THRESHOLD=7
+        if (( $(echo "$SCORE < $THRESHOLD" | bc -l) )); then
+          echo "Pylint score is $SCORE, which is less than the threshold of $THRESHOLD."
+          if [ "$BRANCH_NAME" = "feature" ]; then
+            echo "Warning: Pylint score is below the acceptable threshold on the $BRANCH_NAME branch."
+          else
+            echo "Error: Pylint score is below the acceptable threshold on the $BRANCH_NAME branch. Failing the pipeline."
+            exit 1
+          fi
+        else
+          echo "Pylint score is $SCORE, which is greater than or equal to the threshold of $THRESHOLD. Passing the pipeline."
+        fi
+
+
+
+    # - name: Analysing the code with pylint
+    #   run: |
+    #     pylint --fail-under=0 --rcfile=.pylintrc . > pylint_report.txt
+    #     SCORE=$(grep 'Your code has been rated at' pylint_report.txt | awk '{print $7}' | cut -d'/' -f1)
+    #     if [ "$SCORE" -lt 7 ]; then
+    #       echo "Pylint score is $SCORE, which is less than 7. Failing the pipeline."
+    #       exit 1
+    #     else
+    #       echo "Pylint score is $SCORE, which is greater than or equal to 7. Passing the pipeline."
+    #     fi
+    
+    - name: Zip the pylint report
+      run: zip pylint_report.zip pylint_report.txt
+      
+    - name: Upload pylint report
+      uses: actions/upload-artifact@v3
+      with:
+        name: pylint-report
+        path: pylint_report.zip
