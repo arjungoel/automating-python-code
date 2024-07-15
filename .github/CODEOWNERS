@@ -1,5 +1,5 @@
-# Global owners for everything in the repo
-* @arjungoel
+# Global owners for negating everything in the repo
+!* @arjungoel
 
 # Specific owners for Python files
 *.py @arjungoel
